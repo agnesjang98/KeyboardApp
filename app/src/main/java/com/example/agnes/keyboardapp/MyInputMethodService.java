@@ -7,23 +7,26 @@ import android.text.TextUtils;
 import android.view.View;
 import android.view.inputmethod.InputConnection;
 
+import java.util.HashMap;
+
 
 public class MyInputMethodService extends InputMethodService implements KeyboardView.OnKeyboardActionListener {
+    // Tracks total number of characters
+    private int MAX_CHARACTERS = 0;
 
-//    private HashMap<Integer, String> mapping = new HashMap<Integer, String>() {{
-//        put(0, "if :");
-//        put(1, "if :\nelse :");
-//        put(2, "for :");
-//        put(3, "while :");
-//        put(4, "try:\n\nexcept Exception:");
-//        put(5, "def :");
-//        put(6, "class :");
-//        put(7, "print()");
-//        put(8, "# ");
-//        put(9, "\"\"\"\n\n\"\"\"");
-//    }};
+    private final HashMap<Integer, Key> mapping = new HashMap<Integer, Key>() {{
+        put(0, new Key("if :", 1));
+        put(1, new Key("else:\n    ", 0));
+        put(2, new Key("for :", 1));
+        put(3, new Key("while :", 1));
+        put(4, new Key("try:\n    \nexcept Exception:", 18));
+        put(5, new Key("def ():", 3));
+        put(6, new Key("class :", 1));
+        put(7, new Key("print()", 1));
+        put(8, new Key("# ", 0));
+        put(9, new Key("\"\"\"\n\n\"\"\"", 4));
+    }};
 
-    int MAX_CHARACTERS = 0;
     @Override
     public View onCreateInputView() {
         KeyboardView keyboardView = (KeyboardView) getLayoutInflater().inflate(R.layout.keyboard_view, null);
@@ -49,7 +52,7 @@ public class MyInputMethodService extends InputMethodService implements Keyboard
 
         if (inputConnection != null) {
             switch (primaryCode) {
-                case Keyboard.KEYCODE_DELETE :
+                case Keyboard.KEYCODE_DELETE:
                     CharSequence selectedText = inputConnection.getSelectedText(0);
 
                     if (TextUtils.isEmpty(selectedText)) {
@@ -58,50 +61,26 @@ public class MyInputMethodService extends InputMethodService implements Keyboard
                         inputConnection.commitText("", 1);
                         MAX_CHARACTERS -= 1;
                     }
-
                     break;
-                case 0:
-                    inputConnection.commitText("if :", 1);
-                    break;
-                case 1:
-                    inputConnection.commitText("else :", 1);
-                    break;
-                case 2:
-                    inputConnection.commitText("for :", 1);
-                    break;
-                case 3:
-                    inputConnection.commitText("while :", 1);
-                    break;
-                case 4:
-                    inputConnection.commitText("try:\n\nexcept Exception:", 1);
-                    break;
-                case 5:
-                    inputConnection.commitText("def :", 1);
-                    break;
-                case 6:
-                    inputConnection.commitText("class :", 1);
-                    break;
-                case 7:
-                    inputConnection.commitText("print()", 1);
-                    break;
-                case 8:
-                    inputConnection.commitText("# ", 1);
-                    break;
-                case 9:
-                    inputConnection.commitText("\"\"\"\n\n\"\"\"", 1);
-                    break;
-                case 49:
-                    inputConnection.commitText("if():",1);
-                    MAX_CHARACTERS += 5;
-                    int cursorPosition = inputConnection.getTextBeforeCursor(MAX_CHARACTERS, 0).length();
-                    inputConnection.setSelection(cursorPosition - 2, cursorPosition - 2);
-                    break;
-                default :
-                    char code = (char) primaryCode;
-                    inputConnection.commitText(String.valueOf(code), 1);
-                    MAX_CHARACTERS += 1;
+                default:
+                    if (primaryCode >= 0 && primaryCode < mapping.size()) {
+                        Key key = mapping.get(primaryCode);
+                        inputConnection.commitText(key.string, 1);
+                        MAX_CHARACTERS += key.string.length();
+                        moveCursor(inputConnection, key.offset);
+                    } else {
+                        char code = (char) primaryCode;
+                        inputConnection.commitText(String.valueOf(code), 1);
+                        MAX_CHARACTERS += 1;
+                    }
             }
         }
+    }
+
+    private void moveCursor(InputConnection inputConnection, int amount) {
+        int cursorPosition = inputConnection.getTextBeforeCursor(MAX_CHARACTERS, 0).length();
+        int position = cursorPosition - amount;
+        inputConnection.setSelection(position, position);
     }
 
     @Override
