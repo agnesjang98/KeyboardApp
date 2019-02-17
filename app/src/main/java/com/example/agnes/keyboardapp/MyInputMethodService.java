@@ -10,7 +10,7 @@ import android.view.inputmethod.InputConnection;
 
 
 public class MyInputMethodService extends InputMethodService implements KeyboardView.OnKeyboardActionListener {
-
+    int MAX_CHARACTERS = 0;
     @Override
     public View onCreateInputView() {
         KeyboardView keyboardView = (KeyboardView) getLayoutInflater().inflate(R.layout.keyboard_view, null);
@@ -43,17 +43,20 @@ public class MyInputMethodService extends InputMethodService implements Keyboard
                         inputConnection.deleteSurroundingText(1, 0);
                     } else {
                         inputConnection.commitText("", 1);
+                        MAX_CHARACTERS -= 1;
                     }
 
                     break;
                 case 49:
                     inputConnection.commitText("if():",1);
-//                    EditText editText = findViewById(R.id.editText);
-//                    editText.setSelection(3);
+                    MAX_CHARACTERS += 5;
+                    int cursorPosition = inputConnection.getTextBeforeCursor(MAX_CHARACTERS, 0).length();
+                    inputConnection.setSelection(cursorPosition - 2, cursorPosition - 2);
                     break;
                 default :
                     char code = (char) primatyCode;
                     inputConnection.commitText(String.valueOf(code), 1);
+                    MAX_CHARACTERS += 1;
             }
         }
     }
