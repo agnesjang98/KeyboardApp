@@ -4,12 +4,24 @@ import android.inputmethodservice.InputMethodService;
 import android.inputmethodservice.Keyboard;
 import android.inputmethodservice.KeyboardView;
 import android.text.TextUtils;
-import android.widget.EditText;
 import android.view.View;
 import android.view.inputmethod.InputConnection;
 
 
 public class MyInputMethodService extends InputMethodService implements KeyboardView.OnKeyboardActionListener {
+
+//    private HashMap<Integer, String> mapping = new HashMap<Integer, String>() {{
+//        put(0, "if :");
+//        put(1, "if :\nelse :");
+//        put(2, "for :");
+//        put(3, "while :");
+//        put(4, "try:\n\nexcept Exception:");
+//        put(5, "def :");
+//        put(6, "class :");
+//        put(7, "print()");
+//        put(8, "# ");
+//        put(9, "\"\"\"\n\n\"\"\"");
+//    }};
 
     @Override
     public View onCreateInputView() {
@@ -31,11 +43,11 @@ public class MyInputMethodService extends InputMethodService implements Keyboard
     }
 
     @Override
-    public void onKey(int primatyCode, int[] keyCodes) {
+    public void onKey(int primaryCode, int[] keyCodes) {
         InputConnection inputConnection = getCurrentInputConnection();
 
         if (inputConnection != null) {
-            switch(primatyCode) {
+            switch (primaryCode) {
                 case Keyboard.KEYCODE_DELETE :
                     CharSequence selectedText = inputConnection.getSelectedText(0);
 
@@ -46,13 +58,38 @@ public class MyInputMethodService extends InputMethodService implements Keyboard
                     }
 
                     break;
-                case 49:
-                    inputConnection.commitText("if():",1);
-//                    EditText editText = findViewById(R.id.editText);
-//                    editText.setSelection(3);
+                case 0:
+                    inputConnection.commitText("if :", 1);
+                    break;
+                case 1:
+                    inputConnection.commitText("else :", 1);
+                    break;
+                case 2:
+                    inputConnection.commitText("for :", 1);
+                    break;
+                case 3:
+                    inputConnection.commitText("while :", 1);
+                    break;
+                case 4:
+                    inputConnection.commitText("try:\n\nexcept Exception:", 1);
+                    break;
+                case 5:
+                    inputConnection.commitText("def :", 1);
+                    break;
+                case 6:
+                    inputConnection.commitText("class :", 1);
+                    break;
+                case 7:
+                    inputConnection.commitText("print()", 1);
+                    break;
+                case 8:
+                    inputConnection.commitText("# ", 1);
+                    break;
+                case 9:
+                    inputConnection.commitText("\"\"\"\n\n\"\"\"", 1);
                     break;
                 default :
-                    char code = (char) primatyCode;
+                    char code = (char) primaryCode;
                     inputConnection.commitText(String.valueOf(code), 1);
             }
         }
