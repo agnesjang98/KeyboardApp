@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Keyboard xmlns:android="http://schemas.android.com/apk/res/android"
+    android:keyWidth="20%p"
+    android:horizontalGap="5dp"
+    android:verticalGap="5dp"
+    android:keyHeight="60dp">
+
+    <Row>
+        <Key
+            android:codes="0"
+            android:keyLabel="if"
+            android:keyEdgeFlags="left" />
+        <Key
+            android:codes="1"
+            android:keyLabel="else" />
+        <Key
+            android:codes="2"
+            android:keyLabel="for" />
+        <Key
+            android:codes="3"
+            android:keyLabel="while" />
+        <Key
+            android:codes="4"
+            android:keyLabel="catch"
+            android:keyEdgeFlags="right" />
+    </Row>
+
+    <Row>
+        <Key
+            android:codes="5"
+            android:keyLabel="func"
+            android:keyEdgeFlags="left" />
+        <Key
+            android:codes="6"
+            android:keyLabel="class" />
+        <Key
+            android:codes="7"
+            android:keyLabel="print" />
+        <Key
+            android:codes="8"
+            android:keyLabel="comment" />
+        <Key
+            android:codes="9"
+            android:keyLabel="block"
+            android:keyEdgeFlags="right" />
+    </Row>
+
+    <Row>
+        <Key android:codes="-5"
+            android:keyLabel="DELETE"
+            android:keyWidth="40%p"
+            android:keyEdgeFlags="left"
+            android:isRepeatable="true"/>
+        <Key android:codes="-2"
+            android:keyLabel="TOGGLE"
+            android:keyWidth="60%p" />
+        <Key android:codes="10"
+            android:keyLabel="ENTER"
+            android:keyWidth="60%p"
+            android:keyEdgeFlags="right"/>
+    </Row>
+
+</Keyboard>
