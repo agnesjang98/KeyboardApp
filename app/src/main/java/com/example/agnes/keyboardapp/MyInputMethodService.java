@@ -27,11 +27,17 @@ public class MyInputMethodService extends InputMethodService implements Keyboard
         put(9, new Key("\"\"\"\n\n\"\"\"", 4));
     }};
 
+    private KeyboardView keyboardView;
+
+    private Keyboard qwertyKeyboard;
+    private Keyboard codeKeyboard;
+
     @Override
     public View onCreateInputView() {
-        KeyboardView keyboardView = (KeyboardView) getLayoutInflater().inflate(R.layout.keyboard_view, null);
-        Keyboard keyboard = new Keyboard(this, R.xml.number_pad);
-        keyboardView.setKeyboard(keyboard);
+        keyboardView = (KeyboardView) getLayoutInflater().inflate(R.layout.keyboard_view, null);
+        qwertyKeyboard = new Keyboard(this, R.xml.qwerty);
+        codeKeyboard = new Keyboard(this, R.xml.number_pad);
+        keyboardView.setKeyboard(qwertyKeyboard);
         keyboardView.setOnKeyboardActionListener(this);
         return keyboardView;
     }
@@ -52,7 +58,16 @@ public class MyInputMethodService extends InputMethodService implements Keyboard
 
         if (inputConnection != null) {
             switch (primaryCode) {
-                case Keyboard.KEYCODE_DELETE:
+                case -2:
+                    if (keyboardView.getKeyboard() == qwertyKeyboard){
+                        keyboardView.setKeyboard(codeKeyboard);
+                    }
+                    else {
+                        keyboardView.setKeyboard(qwertyKeyboard);
+                    }
+                    break;
+
+                case Keyboard.KEYCODE_DELETE :
                     CharSequence selectedText = inputConnection.getSelectedText(0);
 
                     if (TextUtils.isEmpty(selectedText)) {

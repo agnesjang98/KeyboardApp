@@ -51,6 +51,9 @@
             android:keyWidth="40%p"
             android:keyEdgeFlags="left"
             android:isRepeatable="true"/>
+        <Key android:codes="-2"
+            android:keyLabel="TOGGLE"
+            android:keyWidth="60%p" />
         <Key android:codes="10"
             android:keyLabel="ENTER"
             android:keyWidth="60%p"
